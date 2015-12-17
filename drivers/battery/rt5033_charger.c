@@ -1117,7 +1117,6 @@ static irqreturn_t rt5033_chg_ieoc_irq_handler(int irq, void *data)
 	struct rt5033_charger_data *info = data;
 	struct i2c_client *iic = info->rt5033->i2c_client;
 	int eoc_reg;
-	union power_supply_propval value;
 	cancel_delayed_work(&info->eoc_timeout_work);
 	mutex_lock(&info->io_lock);
 #if defined(CONFIG_MACH_KOR_EARJACK_WR)
@@ -1141,9 +1140,6 @@ static irqreturn_t rt5033_chg_ieoc_irq_handler(int irq, void *data)
 		pr_info("%s : Full charged\n", __func__);
 		info->full_charged = true;
 		info->eoc_cnt = 0;
-		value.intval = POWER_SUPPLY_STATUS_FULL;
-		psy_do_property("battery", set,
-				POWER_SUPPLY_PROP_STATUS, value);
 	} else {
 		pr_info("%s : Reset EOC detection\n", __func__);
 		msleep(10);
